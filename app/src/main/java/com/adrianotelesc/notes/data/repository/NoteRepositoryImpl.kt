@@ -5,6 +5,6 @@ import com.adrianotelesc.notes.data.model.Note
 class NoteRepositoryImpl : NoteRepository {
     override fun getNotes(): List<Note> =
         List(5) { index ->
-            Note(text = "This is a note ${index + 1}")
+            Note(text = "This is note ${index + 1}")
         }
 }
