@@ -1,7 +1,9 @@
 package com.adrianotelesc.notes.data.repository
 
 import com.adrianotelesc.notes.data.model.Note
+import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
-    fun getNotes(): List<Note>
+    val notes: Flow<List<Note>>
+    fun addNote(text: String)
 }
