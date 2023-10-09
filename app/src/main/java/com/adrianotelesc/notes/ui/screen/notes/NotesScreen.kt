@@ -18,7 +18,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -39,6 +38,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.adrianotelesc.notes.R
 import com.adrianotelesc.notes.data.model.Note
+import com.adrianotelesc.notes.ui.theme.NotesTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -135,7 +135,7 @@ fun Content(
 fun ContentPreview(
     @PreviewParameter(NotePreviewParameterProvider::class) notes: List<Note>,
 ) {
-    MaterialTheme {
+    NotesTheme {
         Content(notes = notes)
     }
 }
