@@ -111,8 +111,8 @@ fun Content(
                 .fillMaxSize()
                 .padding(padding),
             columns = StaggeredGridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalItemSpacing = 16.dp,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalItemSpacing = 8.dp,
             contentPadding = PaddingValues(16.dp),
             state = listState,
         ) {
