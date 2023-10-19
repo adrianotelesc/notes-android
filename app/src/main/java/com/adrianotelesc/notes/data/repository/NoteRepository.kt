@@ -5,5 +5,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
     val notes: Flow<List<Note>>
-    fun addNote(text: String)
+
+    fun add(note: Note): Boolean
+
+    fun delete(note: Note): Boolean
+
+    fun update(note: Note): Boolean
+
+    fun replace(oldNote: Note, newNote: Note): Boolean
+
+    fun findBy(id: String): Note?
 }

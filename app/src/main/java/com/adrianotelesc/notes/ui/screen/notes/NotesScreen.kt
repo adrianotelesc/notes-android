@@ -1,11 +1,9 @@
 package com.adrianotelesc.notes.ui.screen.notes
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -38,36 +37,47 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.adrianotelesc.notes.R
 import com.adrianotelesc.notes.data.model.Note
-import com.adrianotelesc.notes.ui.theme.NotesTheme
+import com.adrianotelesc.notes.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun NotesScreen(viewModel: NotesViewModel = koinViewModel()) {
+fun NotesScreen(
+    viewModel: NotesViewModel = koinViewModel(),
+    navigateToNoteEditing: (noteId: String?) -> Unit = {},
+) {
+    val uiEffect by viewModel.uiEffect.collectAsState(initial = null)
+    LaunchedEffect(key1 = uiEffect) {
+        uiEffect?.let { uiEffect ->
+            when (uiEffect) {
+                is NotesUiEffect.NavigateToNoteEditing ->
+                    navigateToNoteEditing(uiEffect.noteId)
+            }
+        }
+    }
+
     val uiState by viewModel.uiState.collectAsState()
     Content(
         notes = uiState.notes,
-        onAddClick = viewModel::addNote,
+        onAddNoteClick = viewModel::emitNoteEditingNavigationUiEffect,
+        onOpenNoteClick = viewModel::emitNoteEditingNavigationUiEffect,
     )
 }
 
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalAnimationApi::class,
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Content(
     notes: List<Note> = emptyList(),
-    onAddClick: () -> Unit = {},
+    onAddNoteClick: () -> Unit = {},
+    onOpenNoteClick: (Note) -> Unit = {},
 ) {
     val appBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(state = appBarState)
 
-    val listState = rememberLazyStaggeredGridState()
-
-    val showButton by remember {
+    val isFabVisible by remember {
         derivedStateOf { scrollBehavior.state.collapsedFraction == 0f }
     }
+
+    val listState = rememberLazyStaggeredGridState()
 
     Scaffold(
         modifier = Modifier
@@ -81,23 +91,19 @@ fun Content(
         },
         floatingActionButton = {
             AnimatedVisibility(
-                visible = showButton,
+                visible = isFabVisible,
                 enter = scaleIn(
                     animationSpec = keyframes {
                         durationMillis = 120
-                    }
+                    },
                 ),
                 exit = scaleOut(
                     animationSpec = keyframes {
                         durationMillis = 120
-                    }
+                    },
                 ),
             ) {
-                FloatingActionButton(
-                    onClick = {
-                        onAddClick()
-                    },
-                ) {
+                FloatingActionButton(onClick = { onAddNoteClick() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = null,
@@ -110,16 +116,16 @@ fun Content(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
-            columns = StaggeredGridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            columns = StaggeredGridCells.Fixed(count = 2),
+            horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
             verticalItemSpacing = 8.dp,
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(all = 16.dp),
             state = listState,
         ) {
-            items(notes) { note ->
-                Card {
+            items(items = notes) { note ->
+                Card(onClick = { onOpenNoteClick(note) }) {
                     Text(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(all = 16.dp),
                         text = note.text,
                         maxLines = 10,
                         overflow = TextOverflow.Ellipsis,
@@ -135,7 +141,7 @@ fun Content(
 fun ContentPreview(
     @PreviewParameter(NotePreviewParameterProvider::class) notes: List<Note>,
 ) {
-    NotesTheme {
+    AppTheme {
         Content(notes = notes)
     }
 }
@@ -143,9 +149,25 @@ fun ContentPreview(
 class NotePreviewParameterProvider : PreviewParameterProvider<List<Note>> {
     override val values = sequenceOf(
         listOf(
-            Note(text = "My shopping list\n- Eggs\n- Rice\n- Beans\n- Eggs\n- Grapes"),
+            Note(
+                text = """
+                    My shopping list
+                    - Eggs
+                    - Rice
+                    - Beans
+                    - Eggs
+                    - Grapes
+                """.trimIndent()
+            ),
             Note(text = "My favorite person's birthday is July 23"),
-            Note(text = "My watchlist\n- Chainsaw Man 😳\n- Jujutsu Kaisen 👻\n- One Piece 🏴‍☠️"),
+            Note(
+                text = """
+                    My watchlist
+                    - Chainsaw Man 😳
+                    - Jujutsu Kaisen 👻
+                    - One Piece 🏴‍☠️
+                """.trimIndent()
+            ),
         )
     )
 }

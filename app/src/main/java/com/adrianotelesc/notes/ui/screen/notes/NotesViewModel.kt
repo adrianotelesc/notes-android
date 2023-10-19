@@ -2,9 +2,13 @@ package com.adrianotelesc.notes.ui.screen.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adrianotelesc.notes.data.model.Note
 import com.adrianotelesc.notes.data.repository.NoteRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -12,7 +16,13 @@ class NotesViewModel(
     private val noteRepo: NoteRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(value = NotesUiState())
-    val uiState: StateFlow<NotesUiState> get() = _uiState
+
+    val uiState: StateFlow<NotesUiState> = _uiState
+
+    private val _uiEffectChannel = Channel<NotesUiEffect>()
+    private val _uiEffect = _uiEffectChannel.receiveAsFlow()
+
+    val uiEffect: Flow<NotesUiEffect> = _uiEffect
 
     init {
         loadNotes()
@@ -28,13 +38,13 @@ class NotesViewModel(
         }
     }
 
-    fun addNote() {
-        val noteCount = uiState.value.notes.size + 1
-        val text = if (noteCount % 2 == 0) {
-            "This is note  $noteCount.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Integer congue metus accumsan aliquet vestibulum. Sed pellentesque diam tincidunt ligula sollicitudin porttitor."
-        } else {
-            "This is note $noteCount."
+    fun emitNoteEditingNavigationUiEffect(note: Note? = null) {
+        viewModelScope.launch {
+            _uiEffectChannel.send(
+                element = NotesUiEffect.NavigateToNoteEditing(
+                    noteId = note?.id,
+                ),
+            )
         }
-        noteRepo.addNote(text = text)
     }
 }
