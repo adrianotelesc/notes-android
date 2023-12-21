@@ -13,37 +13,27 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
 class NoteEditingViewModel(
-    private val noteId: String?,
+    noteId: String?,
     private val noteRepo: NoteRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(value = NoteEditingUiState())
-
     val uiState: StateFlow<NoteEditingUiState> = _uiState
 
     private val _uiEffectChannel = Channel<NoteEditingUiEffect>()
     private val _uiEffect = _uiEffectChannel.receiveAsFlow()
-
     val uiEffect: Flow<NoteEditingUiEffect> = _uiEffect
 
     init {
-        loadNoteByIdIfNotNull()
-        emitFocusRequestUiEffectIfEmpty()
+        if (noteId != null) updateStateWithNoteBy(id = noteId)
+        if (_uiState.value.note.isEmpty) emitFocusRequestUiEffect()
     }
 
-    private fun loadNoteByIdIfNotNull() {
-        if (noteId != null) loadNoteBy(id = noteId)
-    }
-
-    private fun loadNoteBy(id: String) {
+    private fun updateStateWithNoteBy(id: String) {
         noteRepo.findBy(id = id)?.let { note ->
             _uiState.update { uiState ->
                 uiState.copy(note = note)
             }
         }
-    }
-
-    private fun emitFocusRequestUiEffectIfEmpty() {
-        if (_uiState.value.note.isEmpty) emitFocusRequestUiEffect()
     }
 
     private fun emitFocusRequestUiEffect() {

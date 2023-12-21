@@ -16,12 +16,10 @@ class NotesViewModel(
     private val noteRepo: NoteRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(value = NotesUiState())
-
     val uiState: StateFlow<NotesUiState> = _uiState
 
     private val _uiEffectChannel = Channel<NotesUiEffect>()
     private val _uiEffect = _uiEffectChannel.receiveAsFlow()
-
     val uiEffect: Flow<NotesUiEffect> = _uiEffect
 
     init {
