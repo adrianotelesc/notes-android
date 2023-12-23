@@ -8,5 +8,5 @@ data class Note(
 ) {
     val isEmpty: Boolean get() = text.isEmpty() || text.isBlank()
 
-    val isNotEmpty: Boolean get() = text.isNotEmpty() && text.isNotBlank()
+    val isNotEmpty: Boolean get() = !isEmpty
 }
