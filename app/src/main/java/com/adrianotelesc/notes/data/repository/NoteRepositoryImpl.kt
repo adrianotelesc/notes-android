@@ -10,34 +10,36 @@ class NoteRepositoryImpl : NoteRepository {
     override val notes: Flow<List<Note>> = _notes
 
     override fun update(note: Note) {
-        val oldNote = findBy(id = note.id)
-        when {
-            oldNote == null && note.isNotEmpty -> add(note = note)
-            oldNote != null && oldNote.isNotEmpty && note.isEmpty -> delete(note = oldNote)
-            oldNote != null && oldNote != note -> replace(oldNote = oldNote, newNote = note)
-        }
+        findBy(id = note.id)?.let { existingNote ->
+            if (existingNote.isNotEmpty && note.isEmpty) {
+                delete(note = existingNote)
+            } else if (existingNote != note) {
+                replace(oldNote = existingNote, newNote = note)
+            }
+        } ?: add(note = note)
     }
 
     override fun findBy(id: String): Note? = _notes.value.find { it.id == id }
 
     override fun add(note: Note) {
-        updateNotesState { add(index = 0, element = note) }
+        if (note.isEmpty) return
+        updateNotesStateFlow { add(index = 0, element = note) }
     }
 
-    private fun updateNotesState(block: MutableList<Note>.() -> Unit) {
+    private fun updateNotesStateFlow(block: MutableList<Note>.() -> Unit) {
         _notes.update { notes ->
             notes.toMutableList().apply(block = block)
         }
     }
 
     override fun delete(note: Note) {
-        updateNotesState { remove(element = note) }
+        updateNotesStateFlow { remove(element = note) }
     }
 
     override fun replace(oldNote: Note, newNote: Note) {
-        updateNotesState {
+        updateNotesStateFlow {
             val index = indexOf(element = oldNote)
-            remove(element = oldNote)
+            removeAt(index = index)
             add(index = index, element = newNote)
         }
     }
