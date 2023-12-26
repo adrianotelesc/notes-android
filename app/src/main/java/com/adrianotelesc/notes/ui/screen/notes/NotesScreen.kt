@@ -1,9 +1,5 @@
 package com.adrianotelesc.notes.ui.screen.notes
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,15 +15,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,41 +51,22 @@ fun Content(
     newNote: () -> Unit = {},
     openNote: (noteId: String?) -> Unit = {},
 ) {
-    val appBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(state = appBarState)
     val listState = rememberLazyStaggeredGridState()
-    val isFabVisible by remember { derivedStateOf { scrollBehavior.state.collapsedFraction == 0f } }
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(connection = scrollBehavior.nestedScrollConnection),
+            .fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text(text = "Notes") },
-                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = isFabVisible,
-                enter = scaleIn(
-                    animationSpec = keyframes {
-                        durationMillis = 120
-                    },
-                ),
-                exit = scaleOut(
-                    animationSpec = keyframes {
-                        durationMillis = 120
-                    },
-                ),
-            ) {
-                FloatingActionButton(onClick = { newNote() }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_add),
-                        contentDescription = null,
-                    )
-                }
+            FloatingActionButton(onClick = { newNote() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_add),
+                    contentDescription = null,
+                )
             }
         },
     ) { padding ->
@@ -131,4 +103,3 @@ fun ContentPreview(
         Content(uiState = NotesUiState(notes = notes))
     }
 }
-

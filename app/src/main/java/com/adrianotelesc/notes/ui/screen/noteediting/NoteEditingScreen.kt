@@ -12,8 +12,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -58,9 +55,7 @@ private fun Content(
     updateNote: (text: String) -> Unit = {},
     navigateUp: () -> Unit = {},
 ) {
-    val appBarState = rememberTopAppBarState()
     val scrollState = rememberScrollState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(state = appBarState)
     val focusRequester = remember { FocusRequester() }
     var text by remember { mutableStateOf(value = uiState.note.text) }
 
@@ -72,12 +67,10 @@ private fun Content(
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(connection = scrollBehavior.nestedScrollConnection),
+            .fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {},
-                scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(onClick = { navigateUp() }) {
                         Icon(
