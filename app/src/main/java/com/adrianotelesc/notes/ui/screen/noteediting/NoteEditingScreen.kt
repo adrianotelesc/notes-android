@@ -27,41 +27,47 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adrianotelesc.notes.R
+import com.adrianotelesc.notes.data.model.Note
+import com.adrianotelesc.notes.ui.preview.NotePreviewParameterProvider
+import com.adrianotelesc.notes.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteDetailScreen(
     noteId: String?,
     viewModel: NoteEditingViewModel = koinViewModel(parameters = { parametersOf(noteId) }),
     navigateUp: () -> Unit = {}
 ) {
-    val focusRequester = remember { FocusRequester() }
-
-    val uiEffect by viewModel.uiEffect.collectAsState(initial = null)
-    LaunchedEffect(key1 = uiEffect) {
-        uiEffect?.let { uiEffect ->
-            when (uiEffect) {
-                NoteEditingUiEffect.NavigateUp -> navigateUp()
-                NoteEditingUiEffect.RequestFocus -> focusRequester.requestFocus()
-            }
-        }
-    }
-
-    val appBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(state = appBarState)
-
     val uiState by viewModel.uiState.collectAsState()
-    var text by remember { mutableStateOf(value = uiState.note.text) }
+    Content(
+        uiState = uiState,
+        updateNote = viewModel::updateNote,
+        navigateUp = navigateUp,
+    )
+}
 
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun Content(
+    uiState: NoteEditingUiState,
+    updateNote: (text: String) -> Unit = {},
+    navigateUp: () -> Unit = {},
+) {
+    val appBarState = rememberTopAppBarState()
     val scrollState = rememberScrollState()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(state = appBarState)
+    val focusRequester = remember { FocusRequester() }
+    var text by remember { mutableStateOf(value = uiState.note.text) }
 
     LaunchedEffect(key1 = text) {
         scrollState.animateScrollTo(value = scrollState.maxValue)
-        viewModel.updateNote(text = text)
+        updateNote(text)
+        if (uiState.note.isEmpty) focusRequester.requestFocus()
     }
 
     Scaffold(
@@ -73,7 +79,7 @@ fun NoteDetailScreen(
                 title = {},
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
-                    IconButton(onClick = { viewModel.emitUpNavigationUiEffect() }) {
+                    IconButton(onClick = { navigateUp() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_left),
                             contentDescription = null,
@@ -105,5 +111,15 @@ fun NoteDetailScreen(
                 }
             }
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContentPreview(
+    @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
+) {
+    AppTheme {
+        Content(uiState = NoteEditingUiState(note = note))
     }
 }
