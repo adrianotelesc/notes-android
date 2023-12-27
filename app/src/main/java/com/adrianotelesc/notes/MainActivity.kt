@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.adrianotelesc.notes.ui.screen.noteediting.NoteDetailScreen
+import com.adrianotelesc.notes.ui.screen.noteediting.NoteEditingScreen
 import com.adrianotelesc.notes.ui.screen.notes.NotesScreen
 import com.adrianotelesc.notes.ui.theme.AppTheme
 
@@ -34,24 +34,24 @@ class MainActivity : ComponentActivity() {
                         composable(route = "notes") {
                             NotesScreen(
                                 newNote = {
-                                    navController.navigate("note/$id")
+                                    navController.navigate("note_editing/{id}")
                                 },
                                 openNote = { id ->
-                                    navController.navigate("note/$id")
+                                    navController.navigate("note_editing/$id")
                                 },
                             )
                         }
-
                         composable(
-                            route = "note/{id}",
+                            route = "note_editing/{id}",
                             arguments = listOf(
                                 navArgument(name = "id") {
                                     type = NavType.StringType
+                                    defaultValue = null
                                     nullable = true
                                 },
                             )
                         ) { backStackEntry ->
-                            NoteDetailScreen(
+                            NoteEditingScreen(
                                 navigateUp = navController::navigateUp,
                                 noteId = backStackEntry.arguments?.getString("id"),
                             )

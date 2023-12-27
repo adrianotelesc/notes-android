@@ -35,7 +35,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun NoteDetailScreen(
+fun NoteEditingScreen(
     noteId: String?,
     viewModel: NoteEditingViewModel = koinViewModel(parameters = { parametersOf(noteId) }),
     navigateUp: () -> Unit = {}
@@ -59,20 +59,22 @@ private fun Content(
     val focusRequester = remember { FocusRequester() }
     var text by remember { mutableStateOf(value = uiState.note.text) }
 
-    LaunchedEffect(key1 = text) {
-        scrollState.animateScrollTo(value = scrollState.maxValue)
-        updateNote(text)
+    LaunchedEffect(key1 = Unit) {
         if (uiState.note.isEmpty) focusRequester.requestFocus()
     }
 
+    LaunchedEffect(key1 = text) {
+        scrollState.animateScrollTo(value = scrollState.maxValue)
+        updateNote(text)
+    }
+
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = { navigateUp() }) {
+                    IconButton(onClick = navigateUp) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_left),
                             contentDescription = null,

@@ -54,8 +54,7 @@ fun Content(
     val listState = rememberLazyStaggeredGridState()
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text(text = "Notes") },
