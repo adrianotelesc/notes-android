@@ -1,6 +1,8 @@
 package com.adrianotelesc.notes.ui.screen.noteediting
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -41,6 +43,7 @@ fun NoteEditingScreen(
     navigateUp: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
     Content(
         uiState = uiState,
         updateNote = viewModel::updateNote,
@@ -59,10 +62,6 @@ private fun Content(
     val focusRequester = remember { FocusRequester() }
     var text by remember { mutableStateOf(value = uiState.note.text) }
 
-    LaunchedEffect(key1 = Unit) {
-        if (uiState.note.isEmpty) focusRequester.requestFocus()
-    }
-
     LaunchedEffect(key1 = text) {
         scrollState.animateScrollTo(value = scrollState.maxValue)
         updateNote(text)
@@ -70,43 +69,71 @@ private fun Content(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = navigateUp) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_left),
-                            contentDescription = null,
-                        )
-                    }
-                },
-            )
-        },
+        topBar = { AppBar(onNavigationIconClick = navigateUp) },
     ) { padding ->
-        BasicTextField(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(state = scrollState)
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 24.dp,
-                )
-                .focusRequester(focusRequester = focusRequester),
-            value = text,
-            onValueChange = { text = it },
-            textStyle = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onBackground,
-            ),
-            cursorBrush = SolidColor(value = MaterialTheme.colorScheme.primary),
-            decorationBox = { innerTextField ->
-                Box(modifier = Modifier.padding(paddingValues = padding)) {
-                    innerTextField()
-                }
-            }
+        TextEditor(
+            modifier = Modifier.fillMaxSize(),
+            scrollState = scrollState,
+            focusRequester = focusRequester,
+            padding = padding,
+            autofocus = text.isEmpty(),
+            text = text,
+            onTextChange = { text = it }
         )
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun AppBar(onNavigationIconClick: () -> Unit) {
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = onNavigationIconClick) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_left),
+                    contentDescription = null,
+                )
+            }
+        },
+    )
+}
+
+@Composable
+private fun TextEditor(
+    modifier: Modifier,
+    scrollState: ScrollState = rememberScrollState(),
+    focusRequester: FocusRequester = FocusRequester.Default,
+    padding: PaddingValues = PaddingValues(),
+    autofocus: Boolean = false,
+    text: String = "",
+    onTextChange: (text: String) -> Unit,
+) {
+    LaunchedEffect(key1 = Unit) {
+        if (autofocus) focusRequester.requestFocus()
+    }
+
+    BasicTextField(
+        modifier = modifier
+            .verticalScroll(state = scrollState)
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 24.dp,
+            )
+            .focusRequester(focusRequester = focusRequester),
+        value = text,
+        onValueChange = onTextChange,
+        textStyle = MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onBackground,
+        ),
+        cursorBrush = SolidColor(value = MaterialTheme.colorScheme.primary),
+        decorationBox = { innerTextField ->
+            Box(modifier = Modifier.padding(paddingValues = padding)) {
+                innerTextField()
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)

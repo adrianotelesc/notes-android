@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -37,6 +39,7 @@ fun NotesScreen(
     openNote: (noteId: String?) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
     Content(
         uiState = uiState,
         newNote = newNote,
@@ -55,41 +58,73 @@ fun Content(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Notes") },
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { newNote() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = null,
-                )
-            }
-        },
+        topBar = { AppBar() },
+        floatingActionButton = { Fab(onClick = newNote) },
     ) { padding ->
-        LazyVerticalStaggeredGrid(
+        Grid(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
-            columns = StaggeredGridCells.Fixed(count = 2),
-            horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-            verticalItemSpacing = 8.dp,
-            contentPadding = PaddingValues(all = 16.dp),
-            state = listState,
+            listState = listState
         ) {
             items(items = uiState.notes) { note ->
-                Card(onClick = { openNote(note.id) }) {
-                    Text(
-                        modifier = Modifier.padding(all = 16.dp),
-                        text = note.text,
-                        maxLines = 10,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
+                NoteCard(
+                    onClick = openNote,
+                    note = note
+                )
             }
         }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun AppBar() {
+    TopAppBar(
+        title = { Text(text = "Notes") },
+    )
+}
+
+@Composable
+private fun Fab(onClick: () -> Unit) {
+    FloatingActionButton(onClick = { onClick() }) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_add),
+            contentDescription = null,
+        )
+    }
+}
+
+@Composable
+private fun Grid(
+    modifier: Modifier,
+    listState: LazyStaggeredGridState,
+    content: LazyStaggeredGridScope.() -> Unit
+) {
+    LazyVerticalStaggeredGrid(
+        modifier = modifier,
+        columns = StaggeredGridCells.Fixed(count = 2),
+        horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+        verticalItemSpacing = 8.dp,
+        contentPadding = PaddingValues(all = 16.dp),
+        state = listState,
+        content = content,
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun NoteCard(
+    onClick: (noteId: String?) -> Unit,
+    note: Note
+) {
+    Card(onClick = { onClick(note.id) }) {
+        Text(
+            modifier = Modifier.padding(all = 16.dp),
+            text = note.text,
+            maxLines = 10,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 
