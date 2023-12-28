@@ -42,6 +42,7 @@ fun NoteEditingScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
     uiState: NoteEditingUiState,
@@ -59,7 +60,19 @@ private fun Content(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { AppBar(onNavigationIconClick = navigateUp) },
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(onClick = navigateUp) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_left),
+                            contentDescription = null,
+                        )
+                    }
+                },
+            )
+        },
     ) { padding ->
         TextEditor(
             modifier = Modifier.fillMaxSize(),
@@ -67,25 +80,9 @@ private fun Content(
             scrollState = scrollState,
             autoFocus = textFieldValue.text.isEmpty(),
             value = textFieldValue,
-            onValueChange = { textFieldValue = it }
+            onValueChange = { textFieldValue = it },
         )
     }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun AppBar(onNavigationIconClick: () -> Unit) {
-    TopAppBar(
-        title = {},
-        navigationIcon = {
-            IconButton(onClick = onNavigationIconClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_arrow_left),
-                    contentDescription = null,
-                )
-            }
-        },
-    )
 }
 
 @Preview(showBackground = true)
