@@ -25,7 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,7 @@ import com.adrianotelesc.notes.R
 import com.adrianotelesc.notes.data.model.Note
 import com.adrianotelesc.notes.ui.preview.NotePreviewParameterProvider
 import com.adrianotelesc.notes.ui.theme.AppTheme
+import com.adrianotelesc.notes.util.cursorLine
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -52,7 +55,6 @@ fun NoteEditingScreen(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun Content(
     uiState: NoteEditingUiState,
     updateNote: (text: String) -> Unit = {},
@@ -60,11 +62,10 @@ private fun Content(
 ) {
     val scrollState = rememberScrollState()
     val focusRequester = remember { FocusRequester() }
-    var text by remember { mutableStateOf(value = uiState.note.text) }
+    var textFieldValue by remember { mutableStateOf(value = TextFieldValue(uiState.note.text)) }
 
-    LaunchedEffect(key1 = text) {
-        scrollState.animateScrollTo(value = scrollState.maxValue)
-        updateNote(text)
+    LaunchedEffect(key1 = textFieldValue) {
+        updateNote(textFieldValue.text)
     }
 
     Scaffold(
@@ -76,9 +77,9 @@ private fun Content(
             scrollState = scrollState,
             focusRequester = focusRequester,
             padding = padding,
-            autofocus = text.isEmpty(),
-            text = text,
-            onTextChange = { text = it }
+            autofocus = textFieldValue.text.isEmpty(),
+            value = textFieldValue,
+            onValueChange = { textFieldValue = it }
         )
     }
 }
@@ -106,11 +107,22 @@ private fun TextEditor(
     focusRequester: FocusRequester = FocusRequester.Default,
     padding: PaddingValues = PaddingValues(),
     autofocus: Boolean = false,
-    text: String = "",
-    onTextChange: (text: String) -> Unit,
+    value: TextFieldValue = TextFieldValue(),
+    onValueChange: (text: TextFieldValue) -> Unit,
 ) {
+    val textStyle = MaterialTheme.typography.bodyLarge.copy(
+        color = MaterialTheme.colorScheme.onBackground,
+    )
+    val lineHeight = with(LocalDensity.current) {
+        textStyle.lineHeight.value.dp.roundToPx()
+    }
+
     LaunchedEffect(key1 = Unit) {
         if (autofocus) focusRequester.requestFocus()
+    }
+
+    LaunchedEffect(value) {
+        scrollState.animateScrollTo(value = lineHeight * (value.cursorLine - 1))
     }
 
     BasicTextField(
@@ -122,14 +134,14 @@ private fun TextEditor(
                 bottom = 24.dp,
             )
             .focusRequester(focusRequester = focusRequester),
-        value = text,
-        onValueChange = onTextChange,
-        textStyle = MaterialTheme.typography.bodyLarge.copy(
-            color = MaterialTheme.colorScheme.onBackground,
-        ),
+        value = value,
+        onValueChange = onValueChange,
+        textStyle = textStyle,
         cursorBrush = SolidColor(value = MaterialTheme.colorScheme.primary),
         decorationBox = { innerTextField ->
-            Box(modifier = Modifier.padding(paddingValues = padding)) {
+            Box(
+                modifier = Modifier.padding(paddingValues = padding),
+            ) {
                 innerTextField()
             }
         }
