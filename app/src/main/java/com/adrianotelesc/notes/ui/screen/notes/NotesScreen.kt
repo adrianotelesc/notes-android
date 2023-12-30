@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adrianotelesc.notes.R
 import com.adrianotelesc.notes.data.model.Note
-import com.adrianotelesc.notes.ui.components.NoteCard
+import com.adrianotelesc.notes.ui.components.PostIt
 import com.adrianotelesc.notes.ui.preview.NotesPreviewParameterProvider
 import com.adrianotelesc.notes.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
@@ -80,7 +80,7 @@ fun Content(
             state = listState,
         ) {
             items(items = uiState.notes) { note ->
-                NoteCard(
+                PostIt(
                     id = note.id,
                     text = note.text,
                     onClick = openNote,

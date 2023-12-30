@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun NoteCard(
+fun PostIt(
     id: String,
     text: String,
     onClick: (id: String?) -> Unit,
