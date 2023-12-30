@@ -27,7 +27,7 @@ import com.adrianotelesc.postnote.R
 import com.adrianotelesc.postnote.data.model.Note
 import com.adrianotelesc.postnote.ui.components.PostIt
 import com.adrianotelesc.postnote.ui.preview.NotesPreviewParameterProvider
-import com.adrianotelesc.postnote.ui.theme.AppTheme
+import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -96,7 +96,7 @@ fun Content(
 fun ContentPreview(
     @PreviewParameter(NotesPreviewParameterProvider::class) notes: List<Note>,
 ) {
-    AppTheme {
+    PostnoteTheme {
         Content(uiState = NotesUiState(notes = notes))
     }
 }

@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adrianotelesc.postnote.data.model.Note
 import com.adrianotelesc.postnote.ui.preview.NotePreviewParameterProvider
-import com.adrianotelesc.postnote.ui.theme.AppTheme
+import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +36,7 @@ fun PostIt(
 fun PostItPreview(
     @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
 ) {
-    AppTheme {
+    PostnoteTheme {
         PostIt(text = note.text)
     }
 }

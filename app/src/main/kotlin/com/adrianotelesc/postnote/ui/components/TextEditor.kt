@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adrianotelesc.postnote.data.model.Note
 import com.adrianotelesc.postnote.ui.preview.NotePreviewParameterProvider
-import com.adrianotelesc.postnote.ui.theme.AppTheme
+import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
 import com.adrianotelesc.postnote.util.selectionLine
 
 @Composable
@@ -78,7 +78,7 @@ fun TextEditor(
 fun TextEditorPreview(
     @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
 ) {
-    AppTheme {
+    PostnoteTheme {
         TextEditor(
             value = TextFieldValue(text = note.text),
         )

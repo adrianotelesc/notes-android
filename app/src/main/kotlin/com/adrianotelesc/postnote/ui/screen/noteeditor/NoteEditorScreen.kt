@@ -23,7 +23,7 @@ import com.adrianotelesc.postnote.R
 import com.adrianotelesc.postnote.data.model.Note
 import com.adrianotelesc.postnote.ui.components.TextEditor
 import com.adrianotelesc.postnote.ui.preview.NotePreviewParameterProvider
-import com.adrianotelesc.postnote.ui.theme.AppTheme
+import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -90,7 +90,7 @@ private fun Content(
 fun ContentPreview(
     @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
 ) {
-    AppTheme {
+    PostnoteTheme {
         Content(uiState = NoteEditorUiState(note = note))
     }
 }

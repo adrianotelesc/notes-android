@@ -14,7 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.adrianotelesc.postnote.ui.screen.noteeditor.NoteEditorScreen
 import com.adrianotelesc.postnote.ui.screen.notes.NotesScreen
-import com.adrianotelesc.postnote.ui.theme.AppTheme
+import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            AppTheme {
+            PostnoteTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,

@@ -6,7 +6,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
-class App : Application() {
+class PostnoteApp : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin()
@@ -15,7 +15,7 @@ class App : Application() {
     private fun startKoin() {
         startKoin {
             androidLogger()
-            androidContext(this@App)
+            androidContext(this@PostnoteApp)
             modules(modules = appModule)
         }
     }
