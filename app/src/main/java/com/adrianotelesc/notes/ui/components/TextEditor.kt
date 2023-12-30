@@ -16,17 +16,22 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.adrianotelesc.notes.data.model.Note
+import com.adrianotelesc.notes.ui.preview.NotePreviewParameterProvider
+import com.adrianotelesc.notes.ui.theme.AppTheme
 import com.adrianotelesc.notes.util.selectionLine
 
 @Composable
 fun TextEditor(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(),
     scrollState: ScrollState = rememberScrollState(),
     autoFocus: Boolean = false,
     value: TextFieldValue = TextFieldValue(),
-    onValueChange: (text: TextFieldValue) -> Unit,
+    onValueChange: (text: TextFieldValue) -> Unit = {},
 ) {
     val focusRequester = FocusRequester()
 
@@ -66,4 +71,16 @@ fun TextEditor(
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TextEditorPreview(
+    @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
+) {
+    AppTheme {
+        TextEditor(
+            value = TextFieldValue(text = note.text),
+        )
+    }
 }

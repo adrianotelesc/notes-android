@@ -7,14 +7,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.adrianotelesc.notes.data.model.Note
+import com.adrianotelesc.notes.ui.preview.NotePreviewParameterProvider
+import com.adrianotelesc.notes.ui.theme.AppTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun PostIt(
-    id: String,
+    id: String = "",
     text: String,
-    onClick: (id: String?) -> Unit,
+    onClick: (id: String?) -> Unit = {},
 ) {
     Card(onClick = { onClick(id) }) {
         Text(
@@ -23,5 +28,15 @@ fun PostIt(
             maxLines = 10,
             overflow = TextOverflow.Ellipsis,
         )
+    }
+}
+
+@Preview
+@Composable
+fun PostItPreview(
+    @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
+) {
+    AppTheme {
+        PostIt(text = note.text)
     }
 }
