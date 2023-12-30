@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.adrianotelesc.notes.ui.screen.noteediting.NoteEditingScreen
+import com.adrianotelesc.notes.ui.screen.noteeditor.NoteEditorScreen
 import com.adrianotelesc.notes.ui.screen.notes.NotesScreen
 import com.adrianotelesc.notes.ui.theme.AppTheme
 
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                                 },
                             )
                         ) { backStackEntry ->
-                            NoteEditingScreen(
+                            NoteEditorScreen(
                                 navigateUp = navController::navigateUp,
                                 noteId = backStackEntry.arguments?.getString("id"),
                             )

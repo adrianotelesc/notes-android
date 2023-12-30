@@ -1,4 +1,4 @@
-package com.adrianotelesc.notes.ui.screen.noteediting
+package com.adrianotelesc.notes.ui.screen.noteeditor
 
 import androidx.lifecycle.ViewModel
 import com.adrianotelesc.notes.data.repository.NoteRepository
@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class NoteEditingViewModel(
+class NoteEditorViewModel(
     noteId: String?,
     private val noteRepo: NoteRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(value = NoteEditingUiState())
-    val uiState: StateFlow<NoteEditingUiState> = _uiState
+    private val _uiState = MutableStateFlow(value = NoteEditorUiState())
+    val uiState: StateFlow<NoteEditorUiState> = _uiState
 
     init {
         noteId?.let {

@@ -1,4 +1,4 @@
-package com.adrianotelesc.notes.ui.screen.noteediting
+package com.adrianotelesc.notes.ui.screen.noteeditor
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
@@ -28,9 +28,9 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun NoteEditingScreen(
+fun NoteEditorScreen(
     noteId: String?,
-    viewModel: NoteEditingViewModel = koinViewModel(parameters = { parametersOf(noteId) }),
+    viewModel: NoteEditorViewModel = koinViewModel(parameters = { parametersOf(noteId) }),
     navigateUp: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -45,7 +45,7 @@ fun NoteEditingScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
-    uiState: NoteEditingUiState,
+    uiState: NoteEditorUiState,
     updateNote: (text: String) -> Unit = {},
     navigateUp: () -> Unit = {},
 ) {
@@ -91,6 +91,6 @@ fun ContentPreview(
     @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
 ) {
     AppTheme {
-        Content(uiState = NoteEditingUiState(note = note))
+        Content(uiState = NoteEditorUiState(note = note))
     }
 }

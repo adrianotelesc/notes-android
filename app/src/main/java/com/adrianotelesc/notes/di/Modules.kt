@@ -2,7 +2,7 @@ package com.adrianotelesc.notes.di
 
 import com.adrianotelesc.notes.data.repository.NoteRepository
 import com.adrianotelesc.notes.data.repository.NoteRepositoryImpl
-import com.adrianotelesc.notes.ui.screen.noteediting.NoteEditingViewModel
+import com.adrianotelesc.notes.ui.screen.noteeditor.NoteEditorViewModel
 import com.adrianotelesc.notes.ui.screen.notes.NotesViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -21,7 +21,7 @@ val appModule: Module
 private val viewModelModule = module {
     viewModelOf(::NotesViewModel)
     viewModel { params ->
-        NoteEditingViewModel(
+        NoteEditorViewModel(
             noteId = params[0],
             noteRepo = get()
         )
