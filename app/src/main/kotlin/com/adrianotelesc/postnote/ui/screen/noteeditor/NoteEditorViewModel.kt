@@ -15,9 +15,9 @@ class NoteEditorViewModel(
 
     init {
         noteId?.let {
-            noteRepo.findBy(id = noteId)?.let { note ->
+            noteRepo.findBy(id = noteId)?.let { existingNote ->
                 _uiState.update { uiState ->
-                    uiState.copy(note = note)
+                    uiState.copy(note = existingNote)
                 }
             }
         }

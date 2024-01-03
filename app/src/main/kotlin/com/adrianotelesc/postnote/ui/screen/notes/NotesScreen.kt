@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.adrianotelesc.postnote.R
 import com.adrianotelesc.postnote.data.model.Note
-import com.adrianotelesc.postnote.ui.components.PostIt
+import com.adrianotelesc.postnote.ui.components.StickyNote
 import com.adrianotelesc.postnote.ui.preview.NotesPreviewParameterProvider
 import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
 import org.koin.androidx.compose.koinViewModel
@@ -81,7 +81,7 @@ fun Content(
             state = listState,
         ) {
             items(items = uiState.notes) { note ->
-                PostIt(
+                StickyNote(
                     id = note.id,
                     text = note.text,
                     onClick = openNote,

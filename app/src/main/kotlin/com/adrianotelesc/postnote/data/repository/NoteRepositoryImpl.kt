@@ -15,7 +15,7 @@ class NoteRepositoryImpl : NoteRepository {
     override fun update(note: Note) {
         findBy(id = note.id)?.let { existingNote ->
             if (existingNote.isNotEmpty && note.isEmpty) {
-                delete(note = existingNote)
+                remove(note = existingNote)
             } else if (existingNote != note) {
                 replace(oldNote = existingNote, newNote = note)
             }
@@ -31,7 +31,7 @@ class NoteRepositoryImpl : NoteRepository {
         _notes.update { notes -> notes.toMutableList().apply(block = block) }
     }
 
-    override fun delete(note: Note) {
+    override fun remove(note: Note) {
         updateNotes { remove(element = note) }
     }
 

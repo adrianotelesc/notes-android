@@ -16,7 +16,7 @@ import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun PostIt(
+fun StickyNote(
     id: String = "",
     text: String,
     onClick: (id: String?) -> Unit = {},
@@ -37,6 +37,6 @@ fun PostItPreview(
     @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
 ) {
     PostnoteTheme {
-        PostIt(text = note.text)
+        StickyNote(text = note.text)
     }
 }
