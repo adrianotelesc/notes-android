@@ -1,4 +1,4 @@
-package com.adrianotelesc.postnote.ui.components
+package com.adrianotelesc.postnote.ui.component
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box

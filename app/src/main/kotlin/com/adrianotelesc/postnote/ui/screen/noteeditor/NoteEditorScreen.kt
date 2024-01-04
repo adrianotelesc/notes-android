@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adrianotelesc.postnote.R
 import com.adrianotelesc.postnote.data.model.Note
-import com.adrianotelesc.postnote.ui.components.TextEditor
+import com.adrianotelesc.postnote.ui.component.TextEditor
 import com.adrianotelesc.postnote.ui.preview.NotePreviewParameterProvider
 import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
 import org.koin.androidx.compose.koinViewModel
