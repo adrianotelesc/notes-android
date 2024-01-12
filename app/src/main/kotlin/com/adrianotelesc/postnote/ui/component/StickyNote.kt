@@ -33,7 +33,7 @@ fun StickyNote(
 
 @Preview
 @Composable
-fun PostItPreview(
+fun StickyNotePreview(
     @PreviewParameter(NotePreviewParameterProvider::class) note: Note,
 ) {
     PostnoteTheme {
