@@ -33,11 +33,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = "notes") {
                             NotesScreen(
-                                newNote = {
-                                    navController.navigate("note_editor/{id}")
-                                },
-                                openNote = { id ->
-                                    navController.navigate("note_editor/$id")
+                                navigateToNoteEditor = {
+                                    navController.navigate("note_editor/$it")
                                 },
                             )
                         }

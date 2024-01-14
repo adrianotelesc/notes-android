@@ -9,10 +9,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -21,11 +19,13 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adrianotelesc.postnote.R
 import com.adrianotelesc.postnote.data.model.Note
 import com.adrianotelesc.postnote.ui.component.TextEditor
 import com.adrianotelesc.postnote.ui.preview.NotePreviewParameterProvider
 import com.adrianotelesc.postnote.ui.theme.PostnoteTheme
+import com.adrianotelesc.postnote.util.collectInLaunchedEffectWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,7 +38,13 @@ fun NoteEditorScreen(
         viewModel.loadNoteBy(id = noteId)
     }
 
-    val uiState by viewModel.uiState.collectAsState()
+    viewModel.uiEffect.collectInLaunchedEffectWithLifecycle { uiEffect ->
+        when (uiEffect) {
+            NoteEditorUiEffect.NavigateUp -> navigateUp()
+        }
+    }
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Content(
         uiState = uiState,
         updateNote = viewModel::updateNote,
