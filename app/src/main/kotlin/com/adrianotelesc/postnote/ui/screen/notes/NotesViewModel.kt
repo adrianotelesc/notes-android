@@ -14,11 +14,7 @@ class NotesViewModel(
     private val _uiState = MutableStateFlow(value = NotesUiState())
     val uiState: StateFlow<NotesUiState> = _uiState
 
-    init {
-        loadNotes()
-    }
-
-    private fun loadNotes() {
+    fun loadNotes() {
         viewModelScope.launch {
             noteRepo.notes.collect { notes ->
                 _uiState.update { uiState ->

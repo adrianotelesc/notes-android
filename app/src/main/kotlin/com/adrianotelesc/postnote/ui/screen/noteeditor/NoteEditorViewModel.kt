@@ -7,18 +7,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 class NoteEditorViewModel(
-    noteId: String?,
     private val noteRepo: NoteRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(value = NoteEditorUiState())
     val uiState: StateFlow<NoteEditorUiState> = _uiState
 
-    init {
-        noteId?.let {
-            noteRepo.findBy(id = noteId)?.let { existingNote ->
-                _uiState.update { uiState ->
-                    uiState.copy(note = existingNote)
-                }
+    fun loadNoteBy(id: String?) {
+        id?.let {
+            _uiState.update { uiState ->
+                uiState.copy(
+                    note = noteRepo.findBy(id = id) ?: uiState.note,
+                    isActive = true,
+                )
             }
         }
     }

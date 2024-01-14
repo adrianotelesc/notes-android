@@ -4,7 +4,6 @@ import com.adrianotelesc.postnote.data.repository.NoteRepository
 import com.adrianotelesc.postnote.data.repository.NoteRepositoryImpl
 import com.adrianotelesc.postnote.ui.screen.noteeditor.NoteEditorViewModel
 import com.adrianotelesc.postnote.ui.screen.notes.NotesViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -20,12 +19,7 @@ val appModule: Module
 
 private val viewModelModule = module {
     viewModelOf(::NotesViewModel)
-    viewModel { params ->
-        NoteEditorViewModel(
-            noteId = params[0],
-            noteRepo = get()
-        )
-    }
+    viewModelOf(::NoteEditorViewModel)
 }
 
 private val repoModule = module {
